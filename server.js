@@ -1,82 +1,119 @@
 'use strict'
 const express = require("express");
+require('dotenv').config();
 const movieData = require('./Movie Data/data.json');
+const axios = require("axios");
 let server = express();
 
+
+
 //constructor
-function Movie(title,genre_ids, original_language, original_title,poster_path,video,vote_average,overview,release_date,vote_count,id,adult,backdrop_path,popularity, media_type)
+function Movie(title,poster_path,overview,release_date,id)
 {
 this.title = title;
-this.genre_ids = genre_ids;
-this.original_language= original_language;
-this.original_title = original_title;
 this.poster_path=poster_path;
-this.video=video;
-this.vote_average = vote_average;
 this.overview = overview;
 this.release_date=release_date;
-this.vote_count=vote_count;
 this.id=id;
-this.adult=adult;
-this.backdrop_path=backdrop_path;
-this.popularity=popularity;
-this.media_type=media_type;
 }
 
-const data = movieData;
-const movie = new Movie(data.title,data.genre_ids, data.original_language,data.original_title,data.poster_path,data.video,data.vote_average,data.overview);
-const outputData = {title: movie.title,original_language: movie.original_language,overview: movie.overview};
-
+const movie = new Movie(movieData.title, movieData.poster_path, movieData.overview, movieData.release_date,movieData.genre_ids);
 // Start server
 const ser = server.listen(3000, handleServerStart);
 
 // Routes
 server.get('/', handleMovie);
-server.get('/favorite', handleFavorite);
-server.get('/error', handleError);
-server.get('/*', handlePageNotFound);
-
-
-
-function handleServerError(err, req, res, next) {
-    if (req.path === '/favorite'|| req.path ==='/') {
-      return next(err);
+server.get('/trending', async(req, res)=>
+{
+  let trend = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.APIKEY}&language=en-US`);
+  let trendingArray = trend.data.results;
+  let trendy=[] ;
+  for (let index = 0; index < trendingArray.length; index++) {
+    let m= new Movie(trendingArray[index].title, trendingArray[index].poster_path , trendingArray[index].overview, trendingArray[index].release_date, trendingArray[index].id);
+    trendy.push(m);
     }
-  
-    res.status(500).send({ 
-
-    "status": 500,
-    "responseText": "Sorry, something went wrong"
- });
-  }
-  
-  // Register the error handling middleware
-  server.use(handleServerError);
+  res.send(trendy);
 
 
+});
 
-function handlePageNotFound(req, res) {
-    res.status(404).json({
-      status: 404,
-      responseText: 'Page not found error',
-    });
-  }
-  
+server.get('/search', async(req, res)=>
+{
+const movieTitle = req.query.title;
+let serchData = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.APIKEY}&language=en-US&query=${movieTitle}`);
+res.send(serchData.data);
+});
+
+
+//name/ overview
+server.get('/personList', async(req, res)=>  
+{
+  let personData = await axios.get(`https://api.themoviedb.org/3/person/popular?api_key=${process.env.APIKEY}&language=en-US&page=1`);
+  let personArray = personData.data.results; 
+  let list=[] ;
+  for (let index = 0; index < personArray.length; index++) {
+    list.push({name:personArray[index].name,
+              id: personArray[index].id,
+              profile_path : personArray[index].profile_path,
+              known_for :personArray[index].known_for
+            
+            })
+    
+    }
+  res.send(list);
+});
+
+server.get('/popularSeries', async(req,res)=>
+{
+  let popularSeries = await axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${process.env.APIKEY}&language=en-US&page=1&sort_by=popularity.desc`);
+  let SeriesArray = popularSeries.data.results;
+  let series=[] ;
+  for (let index = 0; index < SeriesArray.length; index++) {
+    let m= new Movie(SeriesArray[index].name, SeriesArray[index].poster_path , SeriesArray[index].overview, SeriesArray[index].release_date, SeriesArray[index].id);
+    series.push(m);
+    }
+  res.send(series);
+})
+
+server.get('/favorite', handleFavorite);
+
+
+
+
   function handleFavorite(req, res) {
     res.send('Welcome to Favorite Page');
   }
 
 
 function handleMovie(req, res) {
-  res.send(JSON.stringify(outputData, null, 2));
-}
-
-function handleError(req, res, next) {
-  const error = new Error('Simulated Error');
-  next(error);
+  res.send(JSON.stringify(movie));
 }
 
 function handleServerStart() {
     console.log('Server is running');
   }
+
+// server.use((req, res, next) => {
+//   if (req.query.pass == "1234") {
+//     next();
+//   } else {
+//     next("Wrong password please try again");
+//   }
+// });
+server.use((err, req, res, next) => {
+  res.status(500).send({
+    code: 500,
+    message: "Server Error",
+    error: err,
+  });
+}); 
+  
+
+server.use((req,res,next)=>
+{
+  res.status(404).send({
+          status: 404,
+          responseText: 'Page not found error',
+})}
+)
 
