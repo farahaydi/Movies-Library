@@ -3,7 +3,9 @@ const express = require("express");
 require('dotenv').config();
 const movieData = require('./Movie Data/data.json');
 const axios = require("axios");
+const pg = require('pg');
 let server = express();
+server.use(express.json());
 
 
 
@@ -19,9 +21,49 @@ this.id=id;
 
 const movie = new Movie(movieData.title, movieData.poster_path, movieData.overview, movieData.release_date,movieData.genre_ids);
 // Start server
-const ser = server.listen(3000, handleServerStart);
+// const ser = server.listen(3000, ()=>{
+//   console.log('Server is running')
+//   });
+//DB connection
+const dbUrl = process.env.DB;
+const dbconection = new pg.Client(dbUrl);
+dbconection.connect().then(()=>{
+  server.listen(3000, ()=>{
+    console.log('Server is running')
+    });
+
+});
+
 
 // Routes
+
+
+server.post('/addMovie', (req,res)=>
+  {
+    req.body
+    let title = req.body.t;
+    let actor = req.body.a;
+    let overview = req.body.o;
+
+    let sql = `insert into movies (title,actor,overview) values($1,$2,$3)`;
+    dbconection.query(sql,[title,actor,overview]).then(()=>{
+      res.status(201).send(`You Added ${title} Movie`)
+    })
+
+
+    // res.send(req.body)
+  });
+
+
+server.get('/getMovies', (req,res)=>
+{
+  let sql = `select * from movies`
+  dbconection.query(sql).then((movieData)=>{
+    res.status(200).send(movieData.rows)
+  })
+});
+
+
 server.get('/', handleMovie);
 server.get('/trending', async(req, res)=>
 {
@@ -89,9 +131,9 @@ function handleMovie(req, res) {
   res.send(JSON.stringify(movie));
 }
 
-function handleServerStart() {
-    console.log('Server is running');
-  }
+// function handleServerStart() {
+//     console.log('Server is running');
+//   }
 
 // server.use((req, res, next) => {
 //   if (req.query.pass == "1234") {
