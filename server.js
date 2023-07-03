@@ -44,9 +44,10 @@ server.post('/addMovie', (req,res)=>
     let title = req.body.t;
     let actor = req.body.a;
     let overview = req.body.o;
+    let comment =req.body.c;
 
-    let sql = `insert into movies (title,actor,overview) values($1,$2,$3)`;
-    dbconection.query(sql,[title,actor,overview]).then(()=>{
+    let sql = `insert into movie (title,actor,overview,comment) values($1,$2,$3,$4)`;
+    dbconection.query(sql,[title,actor,overview,comment]).then(()=>{
       res.status(201).send(`You Added ${title} Movie`)
     })
 
@@ -57,7 +58,7 @@ server.post('/addMovie', (req,res)=>
 
 server.get('/getMovies', (req,res)=>
 {
-  let sql = `select * from movies`
+  let sql = `select * from movie`
   dbconection.query(sql).then((movieData)=>{
     res.status(200).send(movieData.rows)
   })
@@ -116,6 +117,7 @@ server.get('/popularSeries', async(req,res)=>
     }
   res.send(series);
 })
+
 
 server.get('/favorite', handleFavorite);
 
