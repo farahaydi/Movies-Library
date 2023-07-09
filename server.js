@@ -20,7 +20,9 @@ dbconection.connect().then(() => {
   });
 });
 
+
 server.use(mainRoute);
 server.use(movieRoute);
 server.use(notFound);
 server.use(internalError);
+
