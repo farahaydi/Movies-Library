@@ -19,8 +19,6 @@ dbconection.connect().then(() => {
     console.log('Server is running');
   });
 });
-
-
 server.use(mainRoute);
 server.use(movieRoute);
 server.use(notFound);
