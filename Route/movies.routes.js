@@ -7,8 +7,19 @@
 "use strict";
 const express = require("express");
 const dbconection = require("../connection");
+const axios =require('axios');
 const Router = express.Router();
 
+
+
+function Movie(title,poster_path,overview,release_date,id)
+{
+this.title = title;
+this.poster_path=poster_path;
+this.overview = overview;
+this.release_date=release_date;
+this.id=id;
+}
 
 
 Router.post('/addMovie', (req,res, next)=>
@@ -110,6 +121,7 @@ Router.get('/trending', async(req, res)=>
     let m= new Movie(trendingArray[index].title, trendingArray[index].poster_path , trendingArray[index].overview, trendingArray[index].release_date, trendingArray[index].id);
     trendy.push(m);
     }
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.send(trendy);
 
 
