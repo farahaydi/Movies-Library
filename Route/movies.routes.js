@@ -70,7 +70,7 @@ Router.put("/update/:id", (req, res, next) => {
     
 });
   
-Router.delete("/delete/:id", async (req, res) => {
+Router.delete("/delete/:id", async (req, res,next) => {
      try 
     {
     let { id } = req.params;
@@ -100,6 +100,21 @@ Router.get("/getOneMovie/:id", (req, res) => {
    }
     
 });
+
+Router.get('/trending', async(req, res)=>
+{
+  let trend = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.APIKEY}&language=en-US`);
+  let trendingArray = trend.data.results;
+  let trendy=[] ;
+  for (let index = 0; index < trendingArray.length; index++) {
+    let m= new Movie(trendingArray[index].title, trendingArray[index].poster_path , trendingArray[index].overview, trendingArray[index].release_date, trendingArray[index].id);
+    trendy.push(m);
+    }
+  res.send(trendy);
+
+
+});
+
 
 
 module.exports = Router;
