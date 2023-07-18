@@ -8,7 +8,11 @@
 const express = require("express");
 const dbconection = require("../connection");
 const axios =require('axios');
+const cors = require("cors");
 const Router = express.Router();
+
+
+Router.use(cors());
 
 
 
