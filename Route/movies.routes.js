@@ -189,11 +189,12 @@ Router.get('/trending', async (req, res) => {
       let m = new Movie(trendingArray[index].title, trendingArray[index].poster_path, trendingArray[index].overview, trendingArray[index].id);
       trendy.push(m);
     }
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.send(trendy);
   } catch (error) {
     res.status(500).send("Error fetching trending movies");
   }
 });
+
 
 module.exports = Router;
