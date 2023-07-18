@@ -121,8 +121,8 @@ Router.get('/trending', async(req, res)=>
     let m= new Movie(trendingArray[index].title, trendingArray[index].poster_path , trendingArray[index].overview, trendingArray[index].release_date, trendingArray[index].id);
     trendy.push(m);
     }
-  //   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  // res.send(trendy);
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.send(trendy);
 
 
 });
