@@ -17,7 +17,7 @@ server.use(cors());
 server.use(express.json());
 
 dbconection.connect().then(() => {
-  server.listen(3001, () => {
+  server.listen(3003, () => {
     console.log('Server is running');
   });
 });
