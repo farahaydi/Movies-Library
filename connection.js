@@ -1,11 +1,32 @@
 
 
+// const pg = require('pg');
+
+// const {dbUrl} = require("./configs");
+// const dbconection = new pg.Client(dbUrl);
+
+// module.exports = dbconection;
+
 const pg = require('pg');
 
-const {dbUrl} = require("./configs");
-const dbconection = new pg.Client(dbUrl);
+const { dbUrl } = require("./configs");
 
-module.exports = dbconection;
+const dbConnection = new pg.Client({
+  connectionString: dbUrl,
+  ssl: {
+    rejectUnauthorized: false, // Set this to false to bypass SSL/TLS verification (useful for development, not recommended for production)
+  },
+});
+
+dbConnection.connect((err) => {
+  if (err) {
+    console.error('Error connecting to the database:', err.message);
+  } else {
+    console.log('Connected to the database!');
+  }
+});
+
+module.exports = dbConnection;
 
 
 

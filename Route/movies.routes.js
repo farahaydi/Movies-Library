@@ -25,31 +25,23 @@ this.overview = overview;
 this.id=id;
 }
 
-
-Router.post('/addMovie', (req,res, next)=>
-  {
-    try
-    {
-        req.body
-        let title = req.body.t;
-        let actor = req.body.a;
-        let overview = req.body.o;
-        let comment =req.body.c;
-    
-        let sql = `insert into movie (title,actor,overview,comment) values($1,$2,$3,$4)`;
-        dbconection.query(sql,[title,actor,overview,comment]).then(()=>{
-          res.status(201).send(`You Added ${title} Movie`)
-        });
-    }
-    catch(e)
-    {
-        next(`addMovie Error Handler : ${e}`)
-    }
-   
-
-
-    // res.send(req.body)
+Router.post('/addMovie', (req, res, next) => {
+  try {
+    req.body;
+    let title = req.body.t;
+    let actor = req.body.a; // Corrected property name from 'p' to 'a'
+    let overview = req.body.o;
+    let comment = req.body.c;
+    let sql = `insert into movie (title, actor, overview, comment) values($1, $2, $3, $4)`;
+    dbconection.query(sql, [title, actor, overview, comment]).then(() => {
+      res.status(201).send(`You Added ${title} Movie`);
+    });
+  } catch (e) {
+    next(`addMovie Error Handler : ${e}`);
+  }
 });
+
+
 
 
 Router.get('/getMovies', (req,res, next)=>
