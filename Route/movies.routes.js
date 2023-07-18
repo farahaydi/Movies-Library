@@ -21,7 +21,7 @@ function Movie(title,poster_path,overview,release_date,id)
 this.title = title;
 this.poster_path=poster_path;
 this.overview = overview;
-this.release_date=release_date;
+// this.release_date=release_date;
 this.id=id;
 }
 
