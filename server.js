@@ -19,8 +19,8 @@ dbconection.connect().then(() => {
     console.log('Server is running');
   });
 });
-server.use(mainRoute);
-server.use(movieRoute);
-server.use(notFound);
-server.use(internalError);
+server.use(cors(mainRoute));
+server.use( cors(movieRoute));
+server.use(cors(notFound));
+server.use(cors(internalError));
 
