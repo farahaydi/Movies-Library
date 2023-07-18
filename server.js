@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const axios = require('axios');
-server.use(cors()); 
+
 
 const movieRoute = require('./Route/movies.routes');
 const mainRoute = require('./Route/mainRoute.routes');
@@ -13,6 +13,7 @@ const internalError = require('./errorHandler/500');
 const dbconection = require('./connection');
 
 let server = express();
+server.use(cors()); 
 server.use(express.json());
 
 dbconection.connect().then(() => {
