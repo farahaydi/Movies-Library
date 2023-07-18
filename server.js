@@ -40,15 +40,29 @@ const internalError = require('./errorHandler/500');
 const dbconection = require('./connection');
 
 let server = express();
+
+// Middleware
 server.use(cors());
 server.use(express.json());
 
-server.listen(3004, () => {
-  console.log('Server is running on port 3004');
-});
-
-
+// Routes
 server.use(mainRoute);
 server.use(movieRoute);
+
+// Error Handling Middleware
 server.use(notFound);
 server.use(internalError);
+
+// Database Connection
+dbconection.connect((err) => {
+  if (err) {
+    console.error('Error connecting to database:', err);
+  } else {
+    console.log('Connected to database');
+    // Start the server after successful database connection
+    server.listen(3004, () => {
+      console.log('Server is running on port 3004');
+    });
+  }
+});
+
