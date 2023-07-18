@@ -12,7 +12,7 @@ const cors = require("cors");
 const Router = express.Router();
 
 
-Router.use(cors());
+// Router.use(cors());
 
 
 
