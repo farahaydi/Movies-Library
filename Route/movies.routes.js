@@ -161,7 +161,35 @@ Router.post('/addMovie', (req, res, next) => {
     next(`addMovie Error Handler: ${e}`);
   }
 });
-
+Router.delete("/delete/:id", async (req, res,next) => {
+     try 
+    {
+    let { id } = req.params;
+      let sql = `DELETE FROM movie WHERE id =${id}`;
+      let data = await dbconection.query(sql);
+      res.status(204).end();
+    }
+    catch(e)
+    {
+        next (`Delete Error Handler : ${e}`)
+    }
+      
+});
+Router.get('/getMovies', (req,res, next)=>
+{
+    try
+    {
+        let sql = `select * from movie`
+        dbconection.query(sql).then((movieData)=>{
+          res.status(200).send(movieData.rows)
+        })
+    }
+    catch(e)
+    {
+        next(`getMovies Error Handler : ${e}`)
+    }
+ 
+});
 // Other routes...
 
 Router.get("/getOneMovie/:id", (req, res, next) => {
