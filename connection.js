@@ -1,4 +1,14 @@
 
+const pg = require('pg');
+const { dbUrl } = require('./configs');
+
+const dbConnection = new pg.Client({
+  connectionString: dbUrl,
+  ssl: {
+    rejectUnauthorized: false, // Set this to false to bypass SSL/TLS verification (useful for development, not recommended for production)
+  },
+});
+module.exports = dbConnection;
 
 // const pg = require('pg');
 
@@ -7,28 +17,48 @@
 
 // module.exports = dbconection;
 
-const pg = require('pg');
+// const pg = require('pg');
 
-const { dbUrl } = require("./configs");
+// const { dbUrl } = require("./configs");
 
-const dbConnection = new pg.Client({
-  connectionString: dbUrl,
-  ssl: {
-    rejectUnauthorized: false, // Set this to false to bypass SSL/TLS verification (useful for development, not recommended for production)
-  },
-});
+// const dbConnection = new pg.Client({
+//   connectionString: dbUrl,
+//   ssl: {
+//     rejectUnauthorized: false, // Set this to false to bypass SSL/TLS verification (useful for development, not recommended for production)
+//   },
+// });
 
-dbConnection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.message);
-  } else {
-    console.log('Connected to the database!');
-  }
-});
+// dbConnection.connect((err) => {
+//   if (err) {
+//     console.error('Error connecting to the database:', err.message);
+//   } else {
+//     console.log('Connected to the database!');
+//   }
+// });
 
-module.exports = dbConnection;
+// module.exports = dbConnection;
 
 
+// const pg = require('pg');
+// const { dbUrl } = require('./configs');
+
+// const dbConnection = new pg.Client({
+//   connectionString: dbUrl,
+//   ssl: {
+//     rejectUnauthorized: false, // Set this to false to bypass SSL/TLS verification (useful for development, not recommended for production)
+//   },
+// });
+
+// // Connect to the database
+// dbConnection.connect((err) => {
+//   if (err) {
+//     console.error('Error connecting to the database:', err.message);
+//   } else {
+//     console.log('Connected to the database!');
+//   }
+// });
+
+// module.exports = dbConnection;
 
 // const pg = require("pg");
 // const {DB_URL} = require("./configs");
